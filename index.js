@@ -34,77 +34,33 @@ resources.forEach(resource => {
         const html = response.data;
         const $ = cheerio.load(html);
 
-        $('div[class="NodeArticlestyles__ObscuredContentWrapper-sc-1dhoc8d-6 ecjuTH"]').map(function (index) {
+
+        $('div[class="NodeArticlestyles__ObscuredContentWrapper-sc-1dhoc8d-6 ecjuTH"]',).map(function (index) {
             const titles = $(this).children('div[class="styles__BodyText-d07mme-0 VpaCC page-element paragraph undefined "]')
-            .children('p').children('strong').children('a').map(function(data) {
-            
+            .children('p').children('strong').children('a').map(function() {
+
                     const title = $(this).text();
-                    const loca = $(this).parents('strong').parent('p').siblings('div').children('h2').map(function () {
-                        console.log( $(this).text());
-                    }).text();
-                    const description = $(this).text();
+
                     const country = 'United States';
-                    // console.log(description);
-                    // console.log(loca);
-                    // if(index >= 1){
-                    //     const title = $(this).children('div').children('p').children('strong').children('a').text();
-                    //     const description = $(this).children('div').children('p').text();
-                    //     console.log(description); 
-            
-                        // console.log(title);
+
             
                             location.push(
                                 {
                                     title,
                                     country,
-                                    description,
+                                    
                                 }
                             )
                             
-                
-                    
-
-                        
-            
-        
-            // title.map(function () {
-            //     if(index >= 1){
-            //         const title = $(this).children('div').children('p').children('strong').children('a').text();
-            //         const description = $(this).children('div').children('p').text();
-            //         console.log(description); 
-        
-            //         console.log(title);
-        
-            //             location.push(
-            //                 {
-            //                 title
-            //                 }
-            //             )
                         })
             })
-            // if(index >= 1){
-            // const title = $(this).children('div').children('p').children('strong').children('a').text();
-            // const description = $(this).children('div').children('p').text();
-            // console.log(description); 
-
-            // console.log(title);
-
-            //     location.push(
-            //         {
-            //         title
-            //         }
-            //     )
-            
-            // console.log(title)
-            // location.push({
-            //     title
-            // })
-                // }
 
 
         $(`section`).map(function (index) {
             if(index >= 1 && index && index < 35){
             const title = $(this).children('h2').text();
+            const country = 'United States';
+
             // console.log(title);
             const description = $(this).find('div[class="text"]').children('p').text();
                 // console.log(description);
@@ -113,26 +69,23 @@ resources.forEach(resource => {
 
             location.push({
                 title,
+                country,
                 description,
                 image
             })
         }
         })
         
-        $('figure[class="GallerySlideFigure-hyAGVk nPCSW"]').map(function () {
+        $('figure[class="GallerySlideFigure-hyAGVk nPCSW"]').map(function () { 
+                    const country = 'United States';
 
                     const title = $(this).find('h2').text();
                     const description = $(this).find('div[class = "GallerySlideCaptionDek-diuFsG crRUvF"]').text();
-                    // const image = $(this).find('div[class ="GallerySlideAssetContainerInner-jXaSRz gpvvFG"]')
-                    // .children('span[class ="BaseWrap-sc-TURhJ SpanWrapper-kGGzGm eTiIvU fCMktF responsive-asset GallerySlideResponsiveAsset-kJgSyW bDofQw"]')
-                    // .children('picture[class="ResponsiveImagePicture-jIKgcS fArnhQ GallerySlideResponsiveAsset-kJgSyW bDofQw responsive-image"]')
-                    // .children('img[class="ResponsiveImageContainer-dlOMGF byslZC responsive-image__image"]').attr('src');
 
                     const image = $(this).find('img[class = "ResponsiveImageContainer-dlOMGF byslZC responsive-image__image"]').attr('src');
-                    // const image = JSON.parse(images);
-                    // console.log(image);
                         location.push({
                             title,
+                            country,
                             description,
                             image
                         })
