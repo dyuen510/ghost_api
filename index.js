@@ -22,10 +22,6 @@ const us_resources = [
         
         address:'https://www.bobvila.com/slideshow/the-most-haunted-places-in-america-52383',
         base: ''
-    },
-    {
-        address: 'https://wildchina.com/2016/10/the-most-haunted-places-in-china/',
-        base: ''
     }
 ]
 
@@ -36,7 +32,55 @@ const jp_resources = [
     }
 ]
 
+const ch_resources = [
+    {
+        address: 'https://www.funeralwise.com/digital-dying/the-eight-most-haunted-places-in-china/',
+        base: ''
+    },
+    {
+        address: 'https://brandscovery.com/business/content-2253789-top-7-haunted-places-china#/',
+        base: ''
+    }
+]
+
 const locations = [];
+
+
+
+    ch_resources.forEach(resource => {
+        axios.get(resource.address)
+            .then(response => {
+                const html = response.data;
+                const $ = cheerio.load(html);
+
+                $('div[class="entry-content"]').map(function () {
+                    const title = $(this).children('p').children('strong').children('em').children('a').each(function () {
+                        const title = $(this).clone().children().remove().end().text();
+                        const country = 'China';
+                        const description = $(this).parents('em').parents('strong').parents('p').clone().children().remove().end().text();
+                        // console.log(description);
+                        locations.push({
+                            title,
+                            country,
+                            description
+                        })
+                    });
+                })
+
+                $('div[itemprop="articleBody"]').find('h2').map(function () {
+                    const title = $(this).text();
+                    console.log(title);
+                    const country = "China";
+
+                    locations.push({
+                        title,
+                        country
+                    })
+
+                })
+
+            })
+    })
 
     jp_resources.forEach(resource => {
         axios.get(resource.address)
@@ -52,7 +96,7 @@ const locations = [];
                     const latlong = $(this).children('a').children('div').children('div[class="lat-lng"]').text();
                     const image = $(this).children('a').children('figure').children('img').attr('data-src');
                     const description =$(this).children('a').children('div').children('div[class="subtitle-sm content-card-subtitle js-subtitle-content"]').text();
-                    console.log(title);
+                    // console.log(title);
 
                     locations.push({
                         title,
