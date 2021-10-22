@@ -7,7 +7,7 @@ const { forEach } = require('methods');
 
 
 const app = express();
-const resources = [
+const us_resources = [
     {
     
         address:'https://www.cntraveler.com/gallery/the-most-haunted-places-in-america',
@@ -22,17 +22,55 @@ const resources = [
         
         address:'https://www.bobvila.com/slideshow/the-most-haunted-places-in-america-52383',
         base: ''
+    },
+    {
+        address: 'https://wildchina.com/2016/10/the-most-haunted-places-in-china/',
+        base: ''
     }
 ]
 
-const location = [];
+const jp_resources = [
+    {
+        address: 'https://www.atlasobscura.com/lists/supernatural-japan',
+        base: ''
+    }
+]
 
+const locations = [];
 
-resources.forEach(resource => {
-    axios.get(resource.address)
-    .then(response => {
-        const html = response.data;
-        const $ = cheerio.load(html);
+    jp_resources.forEach(resource => {
+        axios.get(resource.address)
+            .then(response => {
+
+                const html = response.data;
+                const $ = cheerio.load(html);
+
+                $('div[class ="index-card-wrap"]').map(function () {
+                    const title = $(this).children('a').children('div').children('h3').text();
+                    const location = $(this).children('a').children('div').children('div[class="detail-sm place-card-location"]').text();
+                    const country = 'Japan';
+                    const latlong = $(this).children('a').children('div').children('div[class="lat-lng"]').text();
+                    const image = $(this).children('a').children('figure').children('img').attr('data-src');
+                    const description =$(this).children('a').children('div').children('div[class="subtitle-sm content-card-subtitle js-subtitle-content"]').text();
+                    console.log(title);
+
+                    locations.push({
+                        title,
+                        location,
+                        latlong,
+                        country,
+                        description,
+                        image
+                    })
+                })
+            })
+    })
+
+    us_resources.forEach(resource => {
+        axios.get(resource.address)
+        .then(response => {
+            const html = response.data;
+            const $ = cheerio.load(html);
 
 
         $('div[class="NodeArticlestyles__ObscuredContentWrapper-sc-1dhoc8d-6 ecjuTH"]',).map(function (index) {
@@ -44,7 +82,7 @@ resources.forEach(resource => {
                     const country = 'United States';
 
             
-                            location.push(
+                            locations.push(
                                 {
                                     title,
                                     country,
@@ -67,7 +105,7 @@ resources.forEach(resource => {
             const image = $(this).find('div[class="content"]').children('div[class="img"]').children('div').children('img').attr('data-src');
             // console.log(image);
 
-            location.push({
+            locations.push({
                 title,
                 country,
                 description,
@@ -83,7 +121,7 @@ resources.forEach(resource => {
                     const description = $(this).find('div[class = "GallerySlideCaptionDek-diuFsG crRUvF"]').text();
 
                     const image = $(this).find('img[class = "ResponsiveImageContainer-dlOMGF byslZC responsive-image__image"]').attr('src');
-                        location.push({
+                        locations.push({
                             title,
                             country,
                             description,
@@ -98,7 +136,7 @@ resources.forEach(resource => {
 
 app.get('/', (req, res) => {
     // res.json('welcome to my haunted USA locations API')
-    res.json(location);
+    res.json(locations);
 })
 console.log(PORT);
 app.listen(PORT, () => console.log(`Server running on ${PORT}`))
