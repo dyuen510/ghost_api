@@ -43,10 +43,33 @@ const ch_resources = [
     }
 ]
 
+const kr_resources = [
+    {
+        address: 'https://korealandscape.net/haunted-places/',
+        base: ''
+    }
+]
+
+
 const locations = [];
 
+    kr_resources.forEach(resource => {
+        axios.get(resource.address)
+        .then(response => {
+            const html = response.data;
+            const $ = cheerio.load(html);
 
+            $('h2[class="elementor-heading-title elementor-size-default"]').map(function () {
+                const title = $(this).text().replace(/\d+|^\s+|\s+$|\./g, '');
+                const country = 'Korea';
 
+                locations.push({
+                    title,
+                    country
+                })
+            })
+        })
+    })
     ch_resources.forEach(resource => {
         axios.get(resource.address)
             .then(response => {
@@ -69,7 +92,7 @@ const locations = [];
 
                 $('div[itemprop="articleBody"]').find('h2').map(function () {
                     const title = $(this).text();
-                    console.log(title);
+                    // console.log(title);
                     const country = "China";
 
                     locations.push({
